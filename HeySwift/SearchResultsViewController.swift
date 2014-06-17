@@ -12,18 +12,21 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet var appsTableView: UITableView
     
     var api: APIController!
-    var tableData = NSDictionary[]()
+    var albums = Album[]()
     var imageCache = Dictionary<String, UIImage>()
-                            
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.api = APIController(delegate: self)
+        api = APIController(delegate: self)
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        self.api.searchItunesFor("Adobe")
+        api.searchItunesFor(.Albums, with: .Artist, containingTerms: "Piano", "Guys")
+        title = "Piano Guys"
     }
 
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -31,40 +34,29 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
 
     
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
-        return tableData.count
+        return albums.count
     }
     
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         let cell = tableView.dequeueReusableCellWithIdentifier("SearchResultCell") as UITableViewCell,
-            rowData = tableData[indexPath.row]
+            album = albums[indexPath.row]
         
-        cell.text = rowData["trackName"] as? String
-        cell.detailTextLabel.text = rowData["formattedPrice"] as? String
+        cell.text = album.title
+        cell.detailTextLabel.text = album.price
         
-        var urlString = rowData["artworkUrl60"] as? String
+        var urlString = album.thumbnailImageURL
         // Check our image cache for the existing key. This is just a dictionary of UIImages
         let image = urlString ? self.imageCache[urlString!] : nil
         // Use blank if we don't have an image already
         cell.image = image ? image! : UIImage(named: "Blank52")
         
         if !image && urlString {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                // If the image does not exist, we need to download it
-                // Download an NSData representation of the image at the URL
-                var error: NSError?
-                let data = NSData.dataWithContentsOfURL(NSURL(string: urlString), options: nil, error: &error)
-                if !data {
-                    println("Error: \(error?.localizedDescription)")
-                } else {
-                    let image = UIImage(data: data)
-                    
-                    // Update on the main queue
-                    dispatch_async(dispatch_get_main_queue()) {
-                        // Store the image in to our cache
-                        self.imageCache[urlString!] = image
-                        cell.image = image
-                    }
+            UIImageLoader.loadURLString(urlString!) {
+                image, error in
+                if image {
+                    self.imageCache[urlString!] = image
+                    cell.image = image
                 }
             }
         }
@@ -72,23 +64,28 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
         return cell
     }
     
-    func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
-        // Get the row data for the selected row
-        let rowData: AnyObject = self.tableData[indexPath.row] as AnyObject
-        
-        let alert = UIAlertView()
-        alert.title = rowData["trackName"] as String
-        alert.message = rowData["formattedPrice"] as String
-        alert.addButtonWithTitle("Ok")
-        alert.show()
-    }
     
     func didRecieveAPIResults(results: NSDictionary) {
         UIApplication.sharedApplication().networkActivityIndicatorVisible = false
         if results["results"] {
-            tableData = results["results"] as NSDictionary[]
+            albums = []
+            let items = results["results"] as NSDictionary[]
+            for result in items {
+                if let album = Album.albumFromAPIResult(result) {
+                    albums.append(album)
+                }
+            }
             appsTableView.reloadData()
         }
+    }
+    
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject) {
+        var detailsViewController = segue.destinationViewController as DetailsViewController
+        let albumIndex = appsTableView.indexPathForSelectedRow().row
+        let selectedAlbum = self.albums[albumIndex]
+        detailsViewController.album = selectedAlbum
+        println("Selected album \(selectedAlbum.title)")
     }
 }
 
