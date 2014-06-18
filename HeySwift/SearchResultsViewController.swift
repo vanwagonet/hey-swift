@@ -8,10 +8,10 @@
 
 import UIKit
 
-class SearchResultsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, APIControllerProtocol {
+class SearchResultsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ItunesAPIControllerProtocol {
     @IBOutlet var appsTableView: UITableView
     
-    var api: APIController!
+    var api: ItunesAPIController!
     var albums = Album[]()
     var imageCache = Dictionary<String, UIImage>()
     
@@ -19,19 +19,13 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        api = APIController(delegate: self)
+        api = ItunesAPIController(delegate: self)
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         api.searchItunesFor(.Albums, with: .Artist, containingTerms: "Piano", "Guys")
         title = "Piano Guys"
     }
-
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
         return albums.count
@@ -39,13 +33,15 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
-        let cell = tableView.dequeueReusableCellWithIdentifier("SearchResultCell") as UITableViewCell,
+        let reuseId = "SearchResultCell",
+            reused = tableView.dequeueReusableCellWithIdentifier(reuseId) as? UITableViewCell,
+            cell = reused ? reused! : UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseId),
             album = albums[indexPath.row]
         
-        cell.text = album.title
-        cell.detailTextLabel.text = album.price
+        cell.text = album.name
+        cell.detailTextLabel.text = album.formattedPrice
         
-        var urlString = album.thumbnailImageURL
+        var urlString: String? = album.artworkThumbnailURL.isEmpty ? nil : album.artworkThumbnailURL
         // Check our image cache for the existing key. This is just a dictionary of UIImages
         let image = urlString ? self.imageCache[urlString!] : nil
         // Use blank if we don't have an image already
@@ -53,7 +49,7 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
         
         if !image && urlString {
             UIImageLoader.loadURLString(urlString!) {
-                image, error in
+                (image: UIImage!, error: NSError!) in
                 if image {
                     self.imageCache[urlString!] = image
                     cell.image = image
@@ -71,7 +67,7 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
             albums = []
             let items = results["results"] as NSDictionary[]
             for result in items {
-                if let album = Album.albumFromAPIResult(result) {
+                if let album = Album.albumFromItunesAPIResult(result) {
                     albums.append(album)
                 }
             }
@@ -85,7 +81,7 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
         let albumIndex = appsTableView.indexPathForSelectedRow().row
         let selectedAlbum = self.albums[albumIndex]
         detailsViewController.album = selectedAlbum
-        println("Selected album \(selectedAlbum.title)")
+        println("Selected album \(selectedAlbum.name)")
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  APIControllerProtocol.swift
+//  APISearchType.swift
 //  HeySwift
 //
 //  Created by Andy VanWagoner on 6/12/14.
@@ -8,6 +8,9 @@
 
 import Foundation
 
-protocol APIControllerProtocol {
-    func didRecieveAPIResults(results: NSDictionary)
+enum ItunesAPISearchType {
+    case Apps
+    case Albums
+    case Songs
+    case Everything
 }

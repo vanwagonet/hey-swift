@@ -9,7 +9,7 @@
 import UIKit
 import MediaPlayer
 
-class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, APIControllerProtocol {
+class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ItunesAPIControllerProtocol {
 
     @IBOutlet var albumCover: UIImageView
     @IBOutlet var priceLabel: UILabel
@@ -18,7 +18,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     let mediaPlayer = MPMoviePlayerController()
     
-    var api: APIController!
+    var api: ItunesAPIController!
     var album: Album?
     var songs: Song[] = []
 
@@ -26,19 +26,19 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        api = APIController(delegate: self)
-        if album?.collectionId {
+        api = ItunesAPIController(delegate: self)
+        if album?.id {
             UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-            api.lookupInItunes(.Songs, inCollection: album!.collectionId!)
+            api.lookupInItunes(.Songs, inCollection: album!.id)
         }
 
-        title = album?.title
-        priceLabel.text = album?.price
+        title = album?.name
+        priceLabel.text = album?.formattedPrice
         albumCover.image = UIImage(named: "Blank52")
         
-        if let urlString = album?.largeImageURL {
+        if let urlString = album?.artworkDetailURL {
             UIImageLoader.loadURLString(urlString) {
-                image, error in
+                (image: UIImage!, error: NSError!) in
                 if image {
                     self.albumCover.image = image
                 }
@@ -48,7 +48,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let center = NSNotificationCenter.defaultCenter(),
             queue = NSOperationQueue.mainQueue()
         center.addObserverForName("MPMoviePlayerPlaybackDidFinishNotification", object: mediaPlayer, queue: queue) {
-            notification in
+            (notification: NSNotification!) in
             let reasonInt = notification.userInfo["MPMoviePlayerPlaybackDidFinishReasonUserInfoKey"] as? Int,
                 reason = reasonInt ? MPMovieFinishReason.fromRaw(reasonInt!) : nil
             if MPMovieFinishReason.PlaybackEnded == reason {
@@ -66,8 +66,10 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     @IBAction func buyLinkTouchUp(sender: AnyObject) {
-        println("Open album link at URL \(album?.itemURL)")
-        UIApplication.sharedApplication().openURL(NSURL(string: album?.itemURL))
+        if let url = album?.viewURL {
+            println("Open album link at URL \(url)")
+            UIApplication.sharedApplication().openURL(NSURL(string: url))
+        }
     }
     
     
@@ -77,13 +79,13 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
-        var cell = tableView.dequeueReusableCellWithIdentifier("SongCell") as SongCell
-        
-        var song = songs[indexPath.row]
-        cell.song = song
-        cell.titleLabel.text = song.title
-        let artistText = (song.artist && song.artist != album?.artist) ? " - " + song.artist! : ""
-        cell.artistLabel.text = (song.price ? song.price! : "") + artistText
+        let reused = tableView.dequeueReusableCellWithIdentifier("SongCell") as? SongCell,
+            cell = reused ? reused! : SongCell(),
+            song = songs[indexPath.row]
+            
+        cell.titleLabel.text = song.name
+        let artistText = (song.artistName != album?.artistName) ? " - " + song.artistName : ""
+        cell.artistLabel.text = song.formattedPrice + artistText
         cell.showPlayIcon()
         
         return cell
@@ -93,24 +95,23 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) as? SongCell {
             let song = songs[indexPath.row]
-            let preview = NSURL(string: song.previewURL!)
+            let preview = NSURL(string: song.previewURL)
             if mediaPlayer.contentURL? == preview {
-                if cell.iconView.isPlaying {
+                if mediaPlayer.playbackState == .Paused {
+                    mediaPlayer.play()
+                    cell.showPauseIcon()
+                    println("Resume \(song.name) from \(song.previewURL)")
+                } else {
                     mediaPlayer.pause()
                     cell.showPlayIcon()
                     tableView.deselectRowAtIndexPath(indexPath, animated: true)
-                    println("Pause \(song.title) from \(song.previewURL)")
-                } else {
-                    mediaPlayer.play()
-                    cell.showPauseIcon()
-                    println("Resume \(song.title) from \(song.previewURL)")
+                    println("Pause \(song.name) from \(song.previewURL)")
                 }
             } else {
-                mediaPlayer.stop()
                 mediaPlayer.contentURL = preview
                 mediaPlayer.play()
                 cell.showPauseIcon()
-                println("Play \(song.title) from \(song.previewURL)")
+                println("Play \(song.name) from \(song.previewURL)")
             }
         }
     }
@@ -129,7 +130,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
             songs = []
             let items = results["results"] as NSDictionary[]
             for result in items {
-                if let song = Song.songFromAPIResult(result) {
+                if let song = Song.songFromItunesAPIResult(result) {
                     songs.append(song)
                 }
             }
@@ -145,8 +146,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 tracksTableView.deselectRowAtIndexPath(indexPath, animated: true)
                 cell.showPlayIcon()
             }
-        /*
-            // can trigger when the user selects a new row, not just when the song ends
+            
             if indexPath.row < songs.count - 1 {
                 let row = indexPath.row + 1,
                 newPath = NSIndexPath(forRow: row, inSection: indexPath.section)
@@ -155,7 +155,6 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 )
                 tableView(tracksTableView, didSelectRowAtIndexPath: newPath)
             }
-        */
         }
     }
     

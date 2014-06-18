@@ -20,7 +20,7 @@ class UIImageLoader {
                 println("Error: \(error?.localizedDescription)")
             }
             // Update on the main queue, since UI will need to redraw
-            dispatch_async(dispatch_get_main_queue()) {
+            dispatch_sync(dispatch_get_main_queue()) {
                 completionHandler(image, error)
             }
         }
