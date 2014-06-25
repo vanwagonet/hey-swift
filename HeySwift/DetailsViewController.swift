@@ -55,6 +55,16 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 self.playbackDidFinish()
             }
         }
+        center.addObserverForName("MPMoviePlayerLoadStateDidChangeNotification", object: mediaPlayer, queue: queue) {
+            (notification: NSNotification!) in
+            self.loadStateDidChange()
+        }
+    }
+    
+    
+    override func viewDidUnload() {
+        super.viewDidUnload()
+        api = nil
     }
     
     
@@ -97,20 +107,20 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let song = songs[indexPath.row]
             let preview = NSURL(string: song.previewURL)
             if mediaPlayer.contentURL? == preview {
-                if mediaPlayer.playbackState == .Paused {
-                    mediaPlayer.play()
+                if mediaPlayer.playbackState == .Paused && !cell.iconView.isWaiting {
                     cell.showPauseIcon()
+                    mediaPlayer.play()
                     println("Resume \(song.name) from \(song.previewURL)")
                 } else {
-                    mediaPlayer.pause()
-                    cell.showPlayIcon()
                     tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                    cell.showPlayIcon()
+                    mediaPlayer.pause()
                     println("Pause \(song.name) from \(song.previewURL)")
                 }
             } else {
+                cell.showWaitingIcon()
                 mediaPlayer.contentURL = preview
                 mediaPlayer.play()
-                cell.showPauseIcon()
                 println("Play \(song.name) from \(song.previewURL)")
             }
         }
@@ -126,15 +136,25 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func didRecieveAPIResults(results: NSDictionary) {
         UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-        if results["results"] {
+        if let items = results["results"] as? NSDictionary[] {
             songs = []
-            let items = results["results"] as NSDictionary[]
             for result in items {
                 if let song = Song.songFromItunesAPIResult(result) {
                     songs.append(song)
                 }
             }
             tracksTableView.reloadData()
+        }
+    }
+    
+    
+    func loadStateDidChange() {
+        if let indexPath = tracksTableView.indexPathForSelectedRow() {
+            if let cell = tracksTableView.cellForRowAtIndexPath(indexPath) as? SongCell {
+                if mediaPlayer.loadState.getLogicValue() {
+                    cell.showPauseIcon()
+                }
+            }
         }
     }
     

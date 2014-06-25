@@ -27,6 +27,12 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     
+    override func viewDidUnload() {
+        super.viewDidUnload()
+        api = nil
+    }
+    
+    
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
         return albums.count
     }

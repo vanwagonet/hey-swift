@@ -16,7 +16,6 @@ class PlayPauseIconView: UIView {
 
     init(frame: CGRect) {
         super.init(frame: frame)
-        // Initialization code
     }
     
     
@@ -48,14 +47,11 @@ class PlayPauseIconView: UIView {
 
     override func drawRect(rect: CGRect) {
         // Drawing code
-        let context = UIGraphicsGetCurrentContext();
         
-        if isWaiting {
-            // do nothing
-        } else if isPlaying {
-            drawPausePathTo(context, boundedBy: rect)
+        if isPlaying {
+            drawPausePathTo(UIGraphicsGetCurrentContext(), boundedBy: rect)
         } else {
-            drawPlayPathTo(context, boundedBy: rect)
+            drawPlayPathTo(UIGraphicsGetCurrentContext(), boundedBy: rect)
         }
     }
     
@@ -73,6 +69,11 @@ class PlayPauseIconView: UIView {
     
     
     func drawPausePathTo(context: CGContextRef, boundedBy rect: CGRect) {
+        if isWaiting {
+            CGContextTranslateCTM(context, rect.width / 4, rect.height / 4)
+            CGContextScaleCTM(context, 0.5, 0.5)
+        }
+        
         CGContextSetFillColorWithColor(context, UIColor.blackColor().CGColor)
         
         CGContextMoveToPoint(context, rect.width / 4, rect.height / 4)

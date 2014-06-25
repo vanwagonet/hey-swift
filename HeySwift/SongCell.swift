@@ -11,9 +11,9 @@ import UIKit
 class SongCell: UITableViewCell {
     
     @IBOutlet var iconView: PlayPauseIconView
+    @IBOutlet var spinner: UIActivityIndicatorView
     @IBOutlet var titleLabel: UILabel
     @IBOutlet var artistLabel: UILabel
-    
     
     init(style: UITableViewCellStyle, reuseIdentifier: String) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -22,16 +22,19 @@ class SongCell: UITableViewCell {
     
     
     func showPlayIcon() {
+        spinner.stopAnimating()
         iconView.showPlayIcon()
     }
     
     
     func showPauseIcon() {
+        spinner.stopAnimating()
         iconView.showPauseIcon()
     }
     
     
     func showWaitingIcon() {
+        spinner.startAnimating()
         iconView.showWaitingIcon()
     }
 }
