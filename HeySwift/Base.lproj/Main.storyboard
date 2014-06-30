@@ -112,12 +112,12 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Track" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="ZEE-ap-vdD">
-                                                    <rect key="frame" x="41" y="6" width="419" height="20.5"/>
+                                                    <rect key="frame" x="44" y="5" width="416" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Azo-1F-kCi" customClass="PlayPauseIconView" customModule="HeySwift" customModuleProvider="target">
+                                                <view contentMode="TopLeft" translatesAutoresizingMaskIntoConstraints="NO" id="Azo-1F-kCi" customClass="PlayPauseIconView" customModule="HeySwift" customModuleProvider="target">
                                                     <rect key="frame" x="11" y="11" width="22" height="22"/>
                                                     <subviews>
                                                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="A5Z-EK-Yug">
@@ -134,25 +134,27 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Artist" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CoV-2y-hmr">
-                                                    <rect key="frame" x="41" y="21.5" width="419" height="22.5"/>
+                                                    <rect key="frame" x="44" y="24" width="416" height="14"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="CoV-2y-hmr" firstAttribute="trailing" secondItem="ZEE-ap-vdD" secondAttribute="trailing" id="4eo-6n-bql"/>
-                                                <constraint firstAttribute="bottom" secondItem="CoV-2y-hmr" secondAttribute="bottom" constant="1" id="Of2-4Y-9NE"/>
+                                                <constraint firstAttribute="bottom" secondItem="Azo-1F-kCi" secondAttribute="bottom" constant="10" id="CeZ-PO-BVH"/>
+                                                <constraint firstItem="ZEE-ap-vdD" firstAttribute="leading" secondItem="z4o-IG-K6h" secondAttribute="leading" constant="44" id="LEN-K8-izS"/>
+                                                <constraint firstAttribute="trailing" secondItem="CoV-2y-hmr" secondAttribute="trailing" constant="20" symbolic="YES" id="NRD-ph-4DR"/>
+                                                <constraint firstAttribute="bottom" secondItem="CoV-2y-hmr" secondAttribute="bottom" constant="5" id="NeD-Er-rSP"/>
                                                 <constraint firstItem="Azo-1F-kCi" firstAttribute="leading" secondItem="z4o-IG-K6h" secondAttribute="leading" constant="11" id="QGN-XP-oTn"/>
-                                                <constraint firstItem="ZEE-ap-vdD" firstAttribute="top" secondItem="z4o-IG-K6h" secondAttribute="top" constant="6" id="QeU-rH-Uwa"/>
-                                                <constraint firstItem="CoV-2y-hmr" firstAttribute="top" secondItem="z4o-IG-K6h" secondAttribute="top" constant="21" id="SNc-0P-Yxb"/>
+                                                <constraint firstItem="ZEE-ap-vdD" firstAttribute="top" secondItem="z4o-IG-K6h" secondAttribute="top" constant="5" id="QeU-rH-Uwa"/>
                                                 <constraint firstItem="Azo-1F-kCi" firstAttribute="top" secondItem="z4o-IG-K6h" secondAttribute="top" constant="11" id="VC7-SE-DhP"/>
                                                 <constraint firstAttribute="trailing" secondItem="ZEE-ap-vdD" secondAttribute="trailing" constant="20" symbolic="YES" id="ZY7-Lk-ysL"/>
-                                                <constraint firstAttribute="bottom" secondItem="ZEE-ap-vdD" secondAttribute="bottom" constant="17.5" id="lAE-Ch-bd0"/>
-                                                <constraint firstItem="CoV-2y-hmr" firstAttribute="leading" secondItem="Azo-1F-kCi" secondAttribute="trailing" constant="8" symbolic="YES" id="lbg-nS-DF9"/>
-                                                <constraint firstItem="ZEE-ap-vdD" firstAttribute="leading" secondItem="Azo-1F-kCi" secondAttribute="trailing" constant="8" symbolic="YES" id="wOJ-0r-el1"/>
+                                                <constraint firstItem="CoV-2y-hmr" firstAttribute="leading" secondItem="z4o-IG-K6h" secondAttribute="leading" constant="44" id="byK-do-2rI"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <accessibilityTraits key="traits" none="YES" playsSound="YES"/>
+                                        </accessibility>
                                         <connections>
                                             <outlet property="artistLabel" destination="CoV-2y-hmr" id="HkU-YS-Qce"/>
                                             <outlet property="iconView" destination="Azo-1F-kCi" id="yYC-rm-Go8"/>
@@ -169,15 +171,15 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="zbP-GZ-iPe" firstAttribute="top" secondItem="RNw-xk-2Al" secondAttribute="top" id="AgH-sm-WcS"/>
                             <constraint firstAttribute="bottom" secondItem="2FA-BB-qYQ" secondAttribute="bottom" id="B7c-2x-Nnr"/>
                             <constraint firstItem="zbP-GZ-iPe" firstAttribute="top" secondItem="KcC-gE-fka" secondAttribute="bottom" constant="17" id="EJd-09-gmK"/>
                             <constraint firstItem="RNw-xk-2Al" firstAttribute="leading" secondItem="CFV-G4-poH" secondAttribute="leading" constant="20" symbolic="YES" id="JA3-Ne-X3M"/>
+                            <constraint firstItem="RNw-xk-2Al" firstAttribute="top" secondItem="KcC-gE-fka" secondAttribute="bottom" constant="17" id="Kyc-kW-tBS"/>
                             <constraint firstItem="2FA-BB-qYQ" firstAttribute="leading" secondItem="CFV-G4-poH" secondAttribute="leading" id="Xas-7p-nON"/>
                             <constraint firstAttribute="trailing" secondItem="2FA-BB-qYQ" secondAttribute="trailing" id="dln-y4-j9q"/>
                             <constraint firstItem="9Az-1t-duI" firstAttribute="trailing" secondItem="zbP-GZ-iPe" secondAttribute="trailing" id="jd2-Iu-oPn"/>
+                            <constraint firstItem="2FA-BB-qYQ" firstAttribute="top" secondItem="KcC-gE-fka" secondAttribute="bottom" constant="136" id="oj9-E2-AeS"/>
                             <constraint firstAttribute="trailing" secondItem="zbP-GZ-iPe" secondAttribute="trailing" constant="20" symbolic="YES" id="pgV-jt-w4g"/>
-                            <constraint firstItem="2FA-BB-qYQ" firstAttribute="top" secondItem="RNw-xk-2Al" secondAttribute="bottom" constant="19" id="xfx-TC-X7i"/>
                             <constraint firstItem="9Az-1t-duI" firstAttribute="top" secondItem="zbP-GZ-iPe" secondAttribute="bottom" constant="8" symbolic="YES" id="ynI-YY-eMC"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>

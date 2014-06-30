@@ -12,6 +12,20 @@ class ItunesAPIController {
     
     var delegate: ItunesAPIControllerProtocol
     
+    let paramTypeMap: Dictionary<ItunesAPISearchType, String> = [
+        .Apps: "&media=software",
+        .Albums: "&media=music&entity=album",
+        .Songs: "&media=music&entity=song",
+        .Everything: "&media=all"
+    ]
+    
+    let paramAttributeMap: Dictionary<ItunesAPISearchAttribute, String> = [
+        .Artist: "&attribute=artistTerm",
+        .Album: "&attribute=albumTerm",
+        .Song: "&attribute=songTerm",
+        .Developer: "&attribute=softwareDeveloper",
+        .Anything: ""
+    ]
     
     init(delegate: ItunesAPIControllerProtocol) {
         self.delegate = delegate
@@ -19,36 +33,18 @@ class ItunesAPIController {
     
     
     func searchParamsForType(type: ItunesAPISearchType) -> String {
-        var params = ""
-        switch(type) {
-        case .Apps:
-            params = "&media=software"
-        case .Albums:
-            params = "&media=music&entity=album"
-        case .Songs:
-            params = "&media=music&entity=song"
-        case .Everything:
-            params = "&media=all"
+        if let params = paramTypeMap[type] {
+            return params
         }
-        return params
+        return ""
     }
     
     
     func searchParamsForAttribute(attribute: ItunesAPISearchAttribute) -> String {
-        var params = ""
-        switch(attribute) {
-        case .Artist:
-            params = "&attribute=artistTerm"
-        case .Album:
-            params = "&attribute=albumTerm"
-        case .Song:
-            params = "&attribute=songTerm"
-        case .Developer:
-            params = "&attribute=softwareDeveloper"
-        case .Anything:
-            params = ""
+        if let params = paramAttributeMap[attribute] {
+            return params
         }
-        return params
+        return ""
     }
     
     
@@ -76,8 +72,6 @@ class ItunesAPIController {
     
     
     func getJSONFromItunes(url: String) {
-        println("Search iTunes API at URL \(url)")
-        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             // Download an NSData representation of the image at the URL
             var error: NSError?

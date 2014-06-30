@@ -17,7 +17,7 @@ class Album {
         artworkDetailURL: String,
         artistName: String,
         price: Double?,
-        currency: String?
+        currency: String
     
     var formattedPrice: String {
         get {
@@ -33,7 +33,7 @@ class Album {
     }
     
     
-    init(id: Int, name: String, viewURL: String, artworkThumbnailURL: String, artworkDetailURL: String, artistName: String, price: Double?, currency: String?) {
+    init(id: Int, name: String, viewURL: String, artworkThumbnailURL: String, artworkDetailURL: String, artistName: String, price: Double?, currency: String) {
         self.id = id
         self.name = name
         self.viewURL = viewURL

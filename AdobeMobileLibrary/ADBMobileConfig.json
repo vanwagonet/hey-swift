@@ -1,0 +1,28 @@
+{
+  "version": "2014-06-28T15:40:23.749Z",
+  "target": {
+    "clientCode": "",
+    "timeout": 5
+  },
+  "audienceManager": {
+    "server": ""
+  },
+  "acquisition": {
+    "server": "c00.adobe.com",
+    "appid": "cf7d2e33-626a-4466-a7c1-ffca2c819436"
+  },
+  "analytics": {
+    "rsids": "mobile11",
+    "server": "obumobile1.d1.sc.omtrdc.net",
+    "ssl": false,
+    "offlineEnabled": true,
+    "charset": "UTF-8",
+    "lifecycleTimeout": 300,
+    "privacyDefault": "optedin",
+    "batchLimit": 0,
+    "timezone": "GMT+8",
+    "timezoneOffset": 480,
+    "referrerTimeout": 5,
+    "poi": []
+  }
+}

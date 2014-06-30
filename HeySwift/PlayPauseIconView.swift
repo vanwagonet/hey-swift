@@ -13,16 +13,6 @@ class PlayPauseIconView: UIView {
     var isPlaying = false
     var isWaiting = false
     
-
-    init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    
-    init(coder aDecoder: NSCoder!) {
-        super.init(coder: aDecoder)
-    }
-    
     
     func showPlayIcon() {
         isPlaying = false

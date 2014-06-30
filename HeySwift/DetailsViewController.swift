@@ -68,6 +68,17 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        ADBMobile.trackState("Album Details", data: [
+            "swf.album": album!.name,
+            "&&products": ";Album:\(album!.name)",
+            "ecom.view": "1"
+        ])
+    }
+    
+    
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         mediaPlayer.stop()
@@ -77,7 +88,12 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBAction func buyLinkTouchUp(sender: AnyObject) {
         if let url = album?.viewURL {
-            println("Open album link at URL \(url)")
+            ADBMobile.trackAction("Buy Album", data: [
+                "swf.album": album!.name,
+                "&&products": ";Album:\(album!.name);1;\(album!.price ? album!.price : 0)",
+                "ecom.currency": album!.currency,
+                "ecom.purchase": "1"
+            ])
             UIApplication.sharedApplication().openURL(NSURL(string: url))
         }
     }
@@ -110,18 +126,27 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 if mediaPlayer.playbackState == .Paused && !cell.iconView.isWaiting {
                     cell.showPauseIcon()
                     mediaPlayer.play()
-                    println("Resume \(song.name) from \(song.previewURL)")
+                    ADBMobile.trackAction("Resume Song Preview", data: [
+                        "swf.album": album!.name,
+                        "swf.song": song.name
+                    ])
                 } else {
                     tableView.deselectRowAtIndexPath(indexPath, animated: true)
                     cell.showPlayIcon()
                     mediaPlayer.pause()
-                    println("Pause \(song.name) from \(song.previewURL)")
+                    ADBMobile.trackAction("Pause Song Preview", data: [
+                        "swf.album": album!.name,
+                        "swf.song": song.name
+                    ])
                 }
             } else {
                 cell.showWaitingIcon()
                 mediaPlayer.contentURL = preview
                 mediaPlayer.play()
-                println("Play \(song.name) from \(song.previewURL)")
+                ADBMobile.trackAction("Preview Song", data: [
+                    "swf.album": album!.name,
+                    "swf.song": song.name
+                ])
             }
         }
     }
@@ -160,20 +185,29 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     func playbackDidFinish() {
-        println("Finshed song")
         if let indexPath = tracksTableView.indexPathForSelectedRow() {
+            var song = songs[indexPath.row]
             if let cell = tracksTableView.cellForRowAtIndexPath(indexPath) as? SongCell {
                 tracksTableView.deselectRowAtIndexPath(indexPath, animated: true)
                 cell.showPlayIcon()
             }
+            ADBMobile.trackAction("Finished Preview Song", data: [
+                "swf.album": album!.name,
+                "swf.song": song.name
+            ])
             
             if indexPath.row < songs.count - 1 {
                 let row = indexPath.row + 1,
-                newPath = NSIndexPath(forRow: row, inSection: indexPath.section)
+                    newPath = NSIndexPath(forRow: row, inSection: indexPath.section)
+                song = songs[row]
                 tracksTableView.selectRowAtIndexPath(newPath,
                     animated: true, scrollPosition: UITableViewScrollPosition.Top
                 )
                 tableView(tracksTableView, didSelectRowAtIndexPath: newPath)
+                ADBMobile.trackAction("Auto Preview Song", data: [
+                    "swf.album": album!.name,
+                    "swf.song": song.name
+                ])
             }
         }
     }

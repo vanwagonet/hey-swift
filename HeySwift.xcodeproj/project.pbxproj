@@ -12,6 +12,10 @@
 		A12C1DF81947FB8800347CFB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A12C1DF61947FB8800347CFB /* Main.storyboard */; };
 		A12C1DFA1947FB8800347CFB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A12C1DF91947FB8800347CFB /* Images.xcassets */; };
 		A12C1E061947FB8800347CFB /* HeySwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12C1E051947FB8800347CFB /* HeySwiftTests.swift */; };
+		A13FFD0D195B3BAF008146C3 /* ADBMobileConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = A13FFD0B195B3BAF008146C3 /* ADBMobileConfig.json */; };
+		A13FFD0E195B3BAF008146C3 /* AdobeMobileLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A13FFD0C195B3BAF008146C3 /* AdobeMobileLibrary.a */; };
+		A13FFD10195B3BCF008146C3 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A13FFD0F195B3BCF008146C3 /* libsqlite3.dylib */; };
+		A13FFD12195B3BDC008146C3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A13FFD11195B3BDC008146C3 /* SystemConfiguration.framework */; };
 		A141C7A6194E771B009F5A8A /* SongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A141C7A5194E771B009F5A8A /* SongCell.swift */; };
 		A141C7B0194E7B23009F5A8A /* Blank52.png in Resources */ = {isa = PBXBuildFile; fileRef = A141C7AD194E7B23009F5A8A /* Blank52.png */; };
 		A141C848194F5B25009F5A8A /* PlayPauseIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A141C847194F5B25009F5A8A /* PlayPauseIconView.swift */; };
@@ -45,6 +49,12 @@
 		A12C1DFF1947FB8800347CFB /* HeySwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HeySwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A12C1E041947FB8800347CFB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A12C1E051947FB8800347CFB /* HeySwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeySwiftTests.swift; sourceTree = "<group>"; };
+		A13FFD0A195B3BAF008146C3 /* ADBMobile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADBMobile.h; sourceTree = "<group>"; };
+		A13FFD0B195B3BAF008146C3 /* ADBMobileConfig.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ADBMobileConfig.json; sourceTree = "<group>"; };
+		A13FFD0C195B3BAF008146C3 /* AdobeMobileLibrary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = AdobeMobileLibrary.a; sourceTree = "<group>"; };
+		A13FFD0F195B3BCF008146C3 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		A13FFD11195B3BDC008146C3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		A13FFD22195B43A2008146C3 /* HeySwift-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HeySwift-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		A141C7A5194E771B009F5A8A /* SongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCell.swift; sourceTree = "<group>"; };
 		A141C7AD194E7B23009F5A8A /* Blank52.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Blank52.png; path = Images/Blank52.png; sourceTree = "<group>"; };
 		A141C847194F5B25009F5A8A /* PlayPauseIconView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayPauseIconView.swift; sourceTree = "<group>"; };
@@ -63,6 +73,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A13FFD12195B3BDC008146C3 /* SystemConfiguration.framework in Frameworks */,
+				A13FFD10195B3BCF008146C3 /* libsqlite3.dylib in Frameworks */,
+				A13FFD0E195B3BAF008146C3 /* AdobeMobileLibrary.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +92,9 @@
 		A12C1DE41947FB8700347CFB = {
 			isa = PBXGroup;
 			children = (
+				A13FFD11195B3BDC008146C3 /* SystemConfiguration.framework */,
+				A13FFD0F195B3BCF008146C3 /* libsqlite3.dylib */,
+				A13FFD09195B3BAF008146C3 /* AdobeMobileLibrary */,
 				A12C1DEF1947FB8800347CFB /* HeySwift */,
 				A12C1E021947FB8800347CFB /* HeySwiftTests */,
 				A12C1DEE1947FB8800347CFB /* Products */,
@@ -97,11 +113,11 @@
 		A12C1DEF1947FB8800347CFB /* HeySwift */ = {
 			isa = PBXGroup;
 			children = (
-				A141C7AD194E7B23009F5A8A /* Blank52.png */,
+				A13FFD22195B43A2008146C3 /* HeySwift-Bridging-Header.h */,
+				A12C1DF21947FB8800347CFB /* AppDelegate.swift */,
 				A1F8288E194AABB300125C67 /* Album.swift */,
 				A15D5A03194CE93F00C9FC95 /* Song.swift */,
 				A141C7A5194E771B009F5A8A /* SongCell.swift */,
-				A12C1DF21947FB8800347CFB /* AppDelegate.swift */,
 				A1C95D0C1949518600164C0A /* ItunesAPIController.swift */,
 				A1F8288A194A9E4100125C67 /* ItunesAPIControllerProtocol.swift */,
 				A1F8288C194AA21200125C67 /* ItunesAPISearchAttribute.swift */,
@@ -111,6 +127,7 @@
 				A1C10715194BFB260073D7DC /* UIImageLoader.swift */,
 				A141C847194F5B25009F5A8A /* PlayPauseIconView.swift */,
 				A12C1DF61947FB8800347CFB /* Main.storyboard */,
+				A141C7AD194E7B23009F5A8A /* Blank52.png */,
 				A12C1DF91947FB8800347CFB /* Images.xcassets */,
 				A12C1DF01947FB8800347CFB /* Supporting Files */,
 			);
@@ -140,6 +157,16 @@
 				A12C1E041947FB8800347CFB /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A13FFD09195B3BAF008146C3 /* AdobeMobileLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				A13FFD0A195B3BAF008146C3 /* ADBMobile.h */,
+				A13FFD0B195B3BAF008146C3 /* ADBMobileConfig.json */,
+				A13FFD0C195B3BAF008146C3 /* AdobeMobileLibrary.a */,
+			);
+			path = AdobeMobileLibrary;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,6 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A141C7B0194E7B23009F5A8A /* Blank52.png in Resources */,
+				A13FFD0D195B3BAF008146C3 /* ADBMobileConfig.json in Resources */,
 				A12C1DF81947FB8800347CFB /* Main.storyboard in Resources */,
 				A12C1DFA1947FB8800347CFB /* Images.xcassets in Resources */,
 			);
@@ -371,14 +399,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = HeySwift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AdobeMobileLibrary",
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "HeySwift-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -387,14 +419,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = HeySwift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AdobeMobileLibrary",
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "HeySwift-Bridging-Header.h";
 			};
 			name = Release;
 		};

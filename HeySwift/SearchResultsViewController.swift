@@ -27,6 +27,16 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        ADBMobile.trackState("Album List", data: [
+            "swf.searchterms": title
+        ])
+        ADBMobile.trackTimedActionStart("Selected Album", data: nil)
+    }
+    
+    
     override func viewDidUnload() {
         super.viewDidUnload()
         api = nil
@@ -87,7 +97,10 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
         let albumIndex = appsTableView.indexPathForSelectedRow().row
         let selectedAlbum = self.albums[albumIndex]
         detailsViewController.album = selectedAlbum
-        println("Selected album \(selectedAlbum.name)")
+        ADBMobile.trackTimedActionUpdate("Selected Album", data: [
+            "swf.album": selectedAlbum.name
+        ])
+        ADBMobile.trackTimedActionEnd("Selected Album", logic: nil)
     }
 }
 
