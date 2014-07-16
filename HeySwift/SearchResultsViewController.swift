@@ -12,8 +12,8 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet var appsTableView: UITableView
     
     var api: ItunesAPIController!
-    var albums = Album[]()
-    var imageCache = Dictionary<String, UIImage>()
+    var albums = [Album]()
+    var imageCache = [String:UIImage]()
     
     
     override func viewDidLoad() {
@@ -37,12 +37,6 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     
-    override func viewDidUnload() {
-        super.viewDidUnload()
-        api = nil
-    }
-    
-    
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
         return albums.count
     }
@@ -54,21 +48,21 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
             cell = reused ? reused! : UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseId),
             album = albums[indexPath.row]
         
-        cell.text = album.name
+        cell.textLabel.text = album.name
         cell.detailTextLabel.text = album.formattedPrice
         
         var urlString: String? = album.artworkThumbnailURL.isEmpty ? nil : album.artworkThumbnailURL
         // Check our image cache for the existing key. This is just a dictionary of UIImages
         let image = urlString ? self.imageCache[urlString!] : nil
         // Use blank if we don't have an image already
-        cell.image = image ? image! : UIImage(named: "Blank52")
+        cell.imageView.image = image ? image! : UIImage(named: "Blank52")
         
         if !image && urlString {
             UIImageLoader.loadURLString(urlString!) {
                 (image: UIImage!, error: NSError!) in
                 if image {
                     self.imageCache[urlString!] = image
-                    cell.image = image
+                    cell.imageView.image = image
                 }
             }
         }
@@ -81,7 +75,7 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
         UIApplication.sharedApplication().networkActivityIndicatorVisible = false
         if results["results"] {
             albums = []
-            let items = results["results"] as NSDictionary[]
+            let items = results["results"] as [NSDictionary]
             for result in items {
                 if let album = Album.albumFromItunesAPIResult(result) {
                     albums.append(album)

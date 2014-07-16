@@ -20,7 +20,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     var api: ItunesAPIController!
     var album: Album?
-    var songs: Song[] = []
+    var songs = [Song]()
 
     
     override func viewDidLoad() {
@@ -47,24 +47,18 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let center = NSNotificationCenter.defaultCenter(),
             queue = NSOperationQueue.mainQueue()
-        center.addObserverForName("MPMoviePlayerPlaybackDidFinishNotification", object: mediaPlayer, queue: queue) {
+        center.addObserverForName(MPMoviePlayerPlaybackDidFinishNotification, object: mediaPlayer, queue: queue) {
             (notification: NSNotification!) in
-            let reasonInt = notification.userInfo["MPMoviePlayerPlaybackDidFinishReasonUserInfoKey"] as? Int,
-                reason = reasonInt ? MPMovieFinishReason.fromRaw(reasonInt!) : nil
+            let reasonObj:AnyObject? = notification.userInfo[MPMoviePlayerPlaybackDidFinishReasonUserInfoKey],
+                reason = reasonObj ? MPMovieFinishReason.fromRaw(reasonObj as Int) : nil
             if MPMovieFinishReason.PlaybackEnded == reason {
                 self.playbackDidFinish()
             }
         }
-        center.addObserverForName("MPMoviePlayerLoadStateDidChangeNotification", object: mediaPlayer, queue: queue) {
+        center.addObserverForName(MPMoviePlayerLoadStateDidChangeNotification, object: mediaPlayer, queue: queue) {
             (notification: NSNotification!) in
             self.loadStateDidChange()
         }
-    }
-    
-    
-    override func viewDidUnload() {
-        super.viewDidUnload()
-        api = nil
     }
     
     
@@ -161,7 +155,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func didRecieveAPIResults(results: NSDictionary) {
         UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-        if let items = results["results"] as? NSDictionary[] {
+        if let items = results["results"] as? [NSDictionary] {
             songs = []
             for result in items {
                 if let song = Song.songFromItunesAPIResult(result) {
