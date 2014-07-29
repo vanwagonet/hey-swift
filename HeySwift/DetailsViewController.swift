@@ -9,7 +9,7 @@
 import UIKit
 import MediaPlayer
 
-class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ItunesAPIControllerProtocol {
+class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet var albumCover: UIImageView!
     @IBOutlet var priceLabel: UILabel!
@@ -18,7 +18,6 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     let mediaPlayer = MPMoviePlayerController()
     
-    var api: ItunesAPIController!
     var album: Album?
     var songs = [Song]()
 
@@ -26,10 +25,9 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        api = ItunesAPIController(delegate: self)
         if album?.id {
             UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-            api.lookupInItunes(.Songs, inCollection: album!.id)
+            ItunesAPI.lookup(.Songs, inCollection: album!.id, completionHandler: didRecieveAPIResults)
         }
 
         title = album?.name

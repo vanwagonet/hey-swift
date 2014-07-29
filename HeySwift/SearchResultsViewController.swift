@@ -8,21 +8,18 @@
 
 import UIKit
 
-class SearchResultsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ItunesAPIControllerProtocol {
+class SearchResultsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet var appsTableView: UITableView!
     
-    var api: ItunesAPIController!
     var albums = [Album]()
     var imageCache = [String:UIImage]()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        api = ItunesAPIController(delegate: self)
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        api.searchItunesFor(.Albums, with: .Artist, containingTerms: "Piano", "Guys")
+        ItunesAPI.searchFor(.Albums, with: .Artist, containingTerms: ["Piano", "Guys"], completionHandler: didRecieveAPIResults)
         title = "Piano Guys"
     }
     

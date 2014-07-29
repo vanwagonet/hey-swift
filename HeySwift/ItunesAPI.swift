@@ -8,31 +8,16 @@
 
 import UIKit
 
-class ItunesAPIController {
+class ItunesAPI {
     
-    var delegate: ItunesAPIControllerProtocol
-    
-    let paramTypeMap: Dictionary<ItunesAPISearchType, String> = [
-        .Apps: "&media=software",
-        .Albums: "&media=music&entity=album",
-        .Songs: "&media=music&entity=song",
-        .Everything: "&media=all"
-    ]
-    
-    let paramAttributeMap: Dictionary<ItunesAPISearchAttribute, String> = [
-        .Artist: "&attribute=artistTerm",
-        .Album: "&attribute=albumTerm",
-        .Song: "&attribute=songTerm",
-        .Developer: "&attribute=softwareDeveloper",
-        .Anything: ""
-    ]
-    
-    init(delegate: ItunesAPIControllerProtocol) {
-        self.delegate = delegate
-    }
-    
-    
-    func searchParamsForType(type: ItunesAPISearchType) -> String {
+    class func searchParamsForType(type: ItunesAPISearchType) -> String {
+        let paramTypeMap: Dictionary<ItunesAPISearchType, String> = [
+            .Apps: "&media=software",
+            .Albums: "&media=music&entity=album",
+            .Songs: "&media=music&entity=song",
+            .Everything: "&media=all"
+        ]
+        
         if let params = paramTypeMap[type] {
             return params
         }
@@ -40,7 +25,15 @@ class ItunesAPIController {
     }
     
     
-    func searchParamsForAttribute(attribute: ItunesAPISearchAttribute) -> String {
+    class func searchParamsForAttribute(attribute: ItunesAPISearchAttribute) -> String {
+        let paramAttributeMap: Dictionary<ItunesAPISearchAttribute, String> = [
+            .Artist: "&attribute=artistTerm",
+            .Album: "&attribute=albumTerm",
+            .Song: "&attribute=songTerm",
+            .Developer: "&attribute=softwareDeveloper",
+            .Anything: ""
+        ]
+        
         if let params = paramAttributeMap[attribute] {
             return params
         }
@@ -48,7 +41,7 @@ class ItunesAPIController {
     }
     
     
-    func searchItunesFor(type: ItunesAPISearchType, with searchAttribute: ItunesAPISearchAttribute = .Anything, containingTerms searchTerm: String...) {
+    class func searchFor(type: ItunesAPISearchType, with searchAttribute: ItunesAPISearchAttribute = .Anything, containingTerms searchTerm: [String], completionHandler callback:(NSDictionary) -> ()) {
         
             // The iTunes API wants multiple terms separated by + symbols
         let itunesSearchTerm = join("+", searchTerm),
@@ -59,19 +52,19 @@ class ItunesAPIController {
         
             url = "https://itunes.apple.com/search?term=\(escapedSearchTerm)\(typeParams)\(attributeParams)"
         
-        getJSONFromItunes(url)
+        getJSONFromItunes(url, callback)
     }
     
     
-    func lookupInItunes(type: ItunesAPISearchType, inCollection collectionId:Int) {
+    class func lookup(type: ItunesAPISearchType, inCollection collectionId:Int, completionHandler callback:(NSDictionary) -> ()) {
         let typeParams = searchParamsForType(type),
             url = "https://itunes.apple.com/lookup?id=\(collectionId)\(typeParams)"
         
-        getJSONFromItunes(url)
+        getJSONFromItunes(url, callback)
     }
     
     
-    func getJSONFromItunes(url: String) {
+    class func getJSONFromItunes(url: String, completionHandler callback:(NSDictionary) -> ()) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             // Download an NSData representation of the image at the URL
             var error: NSError?
@@ -80,7 +73,7 @@ class ItunesAPIController {
                 if let json = jsonResult {
                     // Update on the main queue
                     dispatch_sync(dispatch_get_main_queue()) {
-                        self.delegate.didRecieveAPIResults(json)
+                        callback(json)
                     }
                 } else {
                     println("JSON Error: \(error?.localizedDescription)")
