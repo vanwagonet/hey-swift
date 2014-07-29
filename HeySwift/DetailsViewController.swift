@@ -11,10 +11,10 @@ import MediaPlayer
 
 class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ItunesAPIControllerProtocol {
 
-    @IBOutlet var albumCover: UIImageView
-    @IBOutlet var priceLabel: UILabel
-    @IBOutlet var openButton: UIButton
-    @IBOutlet var tracksTableView: UITableView
+    @IBOutlet var albumCover: UIImageView!
+    @IBOutlet var priceLabel: UILabel!
+    @IBOutlet var openButton: UIButton!
+    @IBOutlet var tracksTableView: UITableView!
     
     let mediaPlayer = MPMoviePlayerController()
     

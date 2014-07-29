@@ -9,7 +9,7 @@
 import UIKit
 
 class SearchResultsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ItunesAPIControllerProtocol {
-    @IBOutlet var appsTableView: UITableView
+    @IBOutlet var appsTableView: UITableView!
     
     var api: ItunesAPIController!
     var albums = [Album]()

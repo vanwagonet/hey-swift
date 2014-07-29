@@ -10,10 +10,10 @@ import UIKit
 
 class SongCell: UITableViewCell {
     
-    @IBOutlet var iconView: PlayPauseIconView
-    @IBOutlet var spinner: UIActivityIndicatorView
-    @IBOutlet var titleLabel: UILabel
-    @IBOutlet var artistLabel: UILabel
+    @IBOutlet var iconView: PlayPauseIconView!
+    @IBOutlet var spinner: UIActivityIndicatorView!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var artistLabel: UILabel!
     
     init(style: UITableViewCellStyle, reuseIdentifier: String) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
