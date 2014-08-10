@@ -20,7 +20,7 @@ class Song {
     
     var formattedPrice: String {
         get {
-            if price {
+            if price != nil {
                 let formatter = NSNumberFormatter();
                 formatter.numberStyle = NSNumberFormatterStyle.CurrencyStyle
                 formatter.currencyCode = currency
@@ -71,39 +71,35 @@ class Song {
     }
     */
     class func songFromItunesAPIResult(result: NSDictionary) -> Song? {
-        let kind = result["kind"] as? String
-        if "song" != kind {
+        if "song" != result["kind"] as? String {
             return nil
         }
         
         let
         id = result["trackId"] as? Int,
         name = result["trackName"] as? String
-        if !id || !name { return nil }
+        if id == nil || name == nil {
+			return nil
+		}
         
-        var previewURL = result["previewUrl"] as? String
-        if !previewURL { previewURL = "" }
-        
-        var artistName = result["artistName"] as? String
-        if !artistName { artistName = "" }
-        
-        var durationMs = result[""] as? Int
-        if !durationMs { durationMs = 0 }
+        let
+		previewURL = result["previewUrl"] as? String ?? "",
+        artistName = result["artistName"] as? String ?? "",
+        durationMs = result[""] as? Int ?? 0,
+		currency = result["currency"] as? String ?? "USD"
         
         var price = result["trackPrice"] as? Double
         if price < 0 { price = nil }
         
-        var currency = result["currency"] as? String
-        if !currency { currency = "USD" }
-        
         return Song(
             id: id!,
             name: name!,
-            previewURL: previewURL!,
-            artistName: artistName!,
-            durationMs: durationMs!,
+            previewURL: previewURL,
+            artistName: artistName,
+            durationMs: durationMs,
             price: price,
-            currency: currency!
+            currency: currency
         )
     }
 }
+

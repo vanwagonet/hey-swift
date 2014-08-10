@@ -15,9 +15,13 @@ class SongCell: UITableViewCell {
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var artistLabel: UILabel!
     
-    init(style: UITableViewCellStyle, reuseIdentifier: String) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         // Initialization code
+    }
+    
+    required init(coder aDecoder: NSCoder!) {
+        super.init(coder: aDecoder)
     }
     
     
@@ -38,3 +42,4 @@ class SongCell: UITableViewCell {
         iconView.showWaitingIcon()
     }
 }
+

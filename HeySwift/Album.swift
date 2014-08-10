@@ -21,7 +21,7 @@ class Album {
     
     var formattedPrice: String {
         get {
-            if price {
+            if price != nil {
                 let formatter = NSNumberFormatter();
                 formatter.numberStyle = NSNumberFormatterStyle.CurrencyStyle
                 formatter.currencyCode = currency
@@ -60,43 +60,37 @@ class Album {
     }
     */
     class func albumFromItunesAPIResult(result: NSDictionary) -> Album? {
-        let type = result["collectionType"] as? String
-        if "Album" != type {
+        if "Album" != result["collectionType"] as? String {
             return nil
         }
         
         let
         id = result["collectionId"] as? Int,
         name = result["collectionName"] as? String
-        if !id || !name { return nil }
+        if id == nil || name == nil {
+			return nil
+		}
         
-        var viewURL = result["collectionViewUrl"] as? String
-        if !viewURL { viewURL = "" }
-        
-        var artworkThumbnailURL = result["artworkUrl60"] as? String
-        if !artworkThumbnailURL { artworkThumbnailURL = "" }
-        
-        var artworkDetailURL = result["artworkUrl100"] as? String
-        if !artworkDetailURL { artworkDetailURL = "" }
-        
-        var artistName = result["artistName"] as? String
-        if !artistName { artistName = "" }
+        let
+		viewURL = result["collectionViewUrl"] as? String ?? "",
+        artworkThumbnailURL = result["artworkUrl60"] as? String ?? "",
+        artworkDetailURL = result["artworkUrl100"] as? String ?? "",
+        artistName = result["artistName"] as? String ?? "",
+        currency = result["currency"] as? String ?? "USD"
         
         var price = result["collectionPrice"] as? Double
         if price < 0 { price = nil }
         
-        var currency = result["currency"] as? String
-        if !currency { currency = "USD" }
-        
         return Album(
             id: id!,
             name: name!,
-            viewURL: viewURL!,
-            artworkThumbnailURL: artworkThumbnailURL!,
-            artworkDetailURL: artworkDetailURL!,
-            artistName: artistName!,
+            viewURL: viewURL,
+            artworkThumbnailURL: artworkThumbnailURL,
+            artworkDetailURL: artworkDetailURL,
+            artistName: artistName,
             price: price,
-            currency: currency!
+            currency: currency
         )
     }
 }
+

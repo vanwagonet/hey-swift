@@ -41,8 +41,8 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         let reuseId = "SearchResultCell",
-            reused = tableView.dequeueReusableCellWithIdentifier(reuseId) as? UITableViewCell,
-            cell = reused ? reused! : UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseId),
+            cell = tableView.dequeueReusableCellWithIdentifier(reuseId) as? UITableViewCell ??
+				UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseId),
             album = albums[indexPath.row]
         
         cell.textLabel.text = album.name
@@ -50,14 +50,14 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
         
         var urlString: String? = album.artworkThumbnailURL.isEmpty ? nil : album.artworkThumbnailURL
         // Check our image cache for the existing key. This is just a dictionary of UIImages
-        let image = urlString ? self.imageCache[urlString!] : nil
+        let image = urlString != nil ? self.imageCache[urlString!] : nil
         // Use blank if we don't have an image already
-        cell.imageView.image = image ? image! : UIImage(named: "Blank52")
+        cell.imageView.image = image ?? UIImage(named: "Blank52")
         
-        if !image && urlString {
+        if image == nil && urlString != nil {
             UIImageLoader.loadURLString(urlString!) {
                 (image: UIImage!, error: NSError!) in
-                if image {
+                if image != nil {
                     self.imageCache[urlString!] = image
                     cell.imageView.image = image
                 }
@@ -70,7 +70,7 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     
     func didRecieveAPIResults(results: NSDictionary) {
         UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-        if results["results"] {
+        if results["results"] != nil {
             albums = []
             let items = results["results"] as [NSDictionary]
             for result in items {
@@ -94,5 +94,4 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
         ADBMobile.trackTimedActionEnd("Selected Album", logic: nil)
     }
 }
-
 

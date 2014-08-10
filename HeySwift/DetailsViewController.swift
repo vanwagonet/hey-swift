@@ -25,7 +25,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if album?.id {
+        if album?.id != nil {
             UIApplication.sharedApplication().networkActivityIndicatorVisible = true
             ItunesAPI.lookup(.Songs, inCollection: album!.id, completionHandler: didRecieveAPIResults)
         }
@@ -37,7 +37,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let urlString = album?.artworkDetailURL {
             UIImageLoader.loadURLString(urlString) {
                 (image: UIImage!, error: NSError!) in
-                if image {
+                if image != nil {
                     self.albumCover.image = image
                 }
             }
@@ -48,7 +48,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
         center.addObserverForName(MPMoviePlayerPlaybackDidFinishNotification, object: mediaPlayer, queue: queue) {
             (notification: NSNotification!) in
             let reasonObj:AnyObject? = notification.userInfo[MPMoviePlayerPlaybackDidFinishReasonUserInfoKey],
-                reason = reasonObj ? MPMovieFinishReason.fromRaw(reasonObj as Int) : nil
+                reason = reasonObj != nil ? MPMovieFinishReason.fromRaw(reasonObj as Int) : nil
             if MPMovieFinishReason.PlaybackEnded == reason {
                 self.playbackDidFinish()
             }
@@ -82,7 +82,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let url = album?.viewURL {
             ADBMobile.trackAction("Buy Album", data: [
                 "swf.album": album!.name,
-                "&&products": ";Album:\(album!.name);1;\(album!.price ? album!.price : 0)",
+                "&&products": ";Album:\(album!.name);1;\(album!.price ?? 0)",
                 "ecom.currency": album!.currency,
                 "ecom.purchase": "1"
             ])
@@ -97,8 +97,9 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
-        let reused = tableView.dequeueReusableCellWithIdentifier("SongCell") as? SongCell,
-            cell = reused ? reused! : SongCell(),
+        let reuseId = "SongCell",
+            cell = tableView.dequeueReusableCellWithIdentifier(reuseId) as? SongCell ??
+                SongCell(style: UITableViewCellStyle.Default, reuseIdentifier: reuseId),
             song = songs[indexPath.row]
             
         cell.titleLabel.text = song.name
@@ -168,7 +169,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     func loadStateDidChange() {
         if let indexPath = tracksTableView.indexPathForSelectedRow() {
             if let cell = tracksTableView.cellForRowAtIndexPath(indexPath) as? SongCell {
-                if mediaPlayer.loadState.getLogicValue() {
+                if mediaPlayer.loadState.boolValue {
                     cell.showPauseIcon()
                 }
             }

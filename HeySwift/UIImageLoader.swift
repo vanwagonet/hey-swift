@@ -13,8 +13,7 @@ class UIImageLoader {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             // Download an NSData representation of the image at the URL
             var image: UIImage?, error: NSError?
-            let data = NSData.dataWithContentsOfURL(NSURL(string: url), options: nil, error: &error)
-            if data {
+            if let data = NSData.dataWithContentsOfURL(NSURL(string: url), options: nil, error: &error) {
                 image = UIImage(data: data)
             } else {
                 println("Error: \(error?.localizedDescription)")
