@@ -47,7 +47,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
             queue = NSOperationQueue.mainQueue()
         center.addObserverForName(MPMoviePlayerPlaybackDidFinishNotification, object: mediaPlayer, queue: queue) {
             (notification: NSNotification!) in
-            let reasonObj:AnyObject? = notification.userInfo[MPMoviePlayerPlaybackDidFinishReasonUserInfoKey],
+            let reasonObj:AnyObject? = notification.userInfo?[MPMoviePlayerPlaybackDidFinishReasonUserInfoKey],
                 reason = reasonObj != nil ? MPMovieFinishReason.fromRaw(reasonObj as Int) : nil
             if MPMovieFinishReason.PlaybackEnded == reason {
                 self.playbackDidFinish()
@@ -91,12 +91,12 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     
-    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return songs.count
     }
     
     
-    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let reuseId = "SongCell",
             cell = tableView.dequeueReusableCellWithIdentifier(reuseId) as? SongCell ??
                 SongCell(style: UITableViewCellStyle.Default, reuseIdentifier: reuseId),
@@ -111,7 +111,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     
-    func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) as? SongCell {
             let song = songs[indexPath.row]
             let preview = NSURL(string: song.previewURL)
@@ -145,7 +145,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     
-    func tableView(tableView: UITableView!, didDeselectRowAtIndexPath indexPath: NSIndexPath!) {
+    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) as? SongCell {
             cell.showPlayIcon()
         }
@@ -169,7 +169,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     func loadStateDidChange() {
         if let indexPath = tracksTableView.indexPathForSelectedRow() {
             if let cell = tracksTableView.cellForRowAtIndexPath(indexPath) as? SongCell {
-                if mediaPlayer.loadState.boolValue {
+                if mediaPlayer.loadState != MPMovieLoadState.Unknown {
                     cell.showPauseIcon()
                 }
             }

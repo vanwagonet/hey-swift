@@ -28,38 +28,38 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
         super.viewDidAppear(animated)
         
         ADBMobile.trackState("Album List", data: [
-            "swf.searchterms": title
+            "swf.searchterms": title!
         ])
         ADBMobile.trackTimedActionStart("Selected Album", data: nil)
     }
     
     
-    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return albums.count
     }
     
     
-    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let reuseId = "SearchResultCell",
             cell = tableView.dequeueReusableCellWithIdentifier(reuseId) as? UITableViewCell ??
 				UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseId),
             album = albums[indexPath.row]
         
-        cell.textLabel.text = album.name
-        cell.detailTextLabel.text = album.formattedPrice
+        cell.textLabel?.text = album.name
+        cell.detailTextLabel?.text = album.formattedPrice
         
         var urlString: String? = album.artworkThumbnailURL.isEmpty ? nil : album.artworkThumbnailURL
         // Check our image cache for the existing key. This is just a dictionary of UIImages
         let image = urlString != nil ? self.imageCache[urlString!] : nil
         // Use blank if we don't have an image already
-        cell.imageView.image = image ?? UIImage(named: "Blank52")
+        cell.imageView?.image = image ?? UIImage(named: "Blank52")
         
         if image == nil && urlString != nil {
             UIImageLoader.loadURLString(urlString!) {
                 (image: UIImage!, error: NSError!) in
                 if image != nil {
                     self.imageCache[urlString!] = image
-                    cell.imageView.image = image
+                    cell.imageView?.image = image
                 }
             }
         }
@@ -83,10 +83,10 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         var detailsViewController = segue.destinationViewController as DetailsViewController
-        let albumIndex = appsTableView.indexPathForSelectedRow().row
-        let selectedAlbum = self.albums[albumIndex]
+        let albumIndex = appsTableView.indexPathForSelectedRow()?.row
+        let selectedAlbum = self.albums[albumIndex ?? 0]
         detailsViewController.album = selectedAlbum
         ADBMobile.trackTimedActionUpdate("Selected Album", data: [
             "swf.album": selectedAlbum.name

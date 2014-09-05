@@ -45,7 +45,7 @@ class ItunesAPI {
         
             // The iTunes API wants multiple terms separated by + symbols
         let itunesSearchTerm = join("+", searchTerm),
-            escapedSearchTerm = itunesSearchTerm.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding),
+            escapedSearchTerm = itunesSearchTerm.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding) ?? "",
         
             typeParams = searchParamsForType(type),
             attributeParams = searchParamsForAttribute(searchAttribute),
